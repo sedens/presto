@@ -591,6 +591,19 @@ public final class MathFunctions
         return Math.PI;
     }
 
+    @Description("the constant Tau")
+    @ScalarFunction
+    @SqlType(StandardTypes.DOUBLE)
+    public static double tau()
+    {
+        return 2.0*Math.PI;
+    }
+
+    @Description("the constant Pau")
+    @ScalarFunction
+    @SqlType(StandardTypes.DOUBLE)
+    public static double pau() { return 1.5*Math.PI; }
+
     @Description("value raised to the power of exponent")
     @ScalarFunction(alias = "pow")
     @SqlType(StandardTypes.DOUBLE)
