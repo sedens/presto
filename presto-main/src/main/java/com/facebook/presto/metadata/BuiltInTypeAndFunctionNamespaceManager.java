@@ -76,6 +76,7 @@ import com.facebook.presto.operator.aggregation.RealSumAggregation;
 import com.facebook.presto.operator.aggregation.ReduceAggregationFunction;
 import com.facebook.presto.operator.aggregation.SumDataSizeForStats;
 import com.facebook.presto.operator.aggregation.VarianceAggregation;
+import com.facebook.presto.operator.aggregation.WeightedAverageAggregations;
 import com.facebook.presto.operator.aggregation.approxmostfrequent.BigintApproximateMostFrequent;
 import com.facebook.presto.operator.aggregation.approxmostfrequent.VarcharApproximateMostFrequent;
 import com.facebook.presto.operator.aggregation.arrayagg.ArrayAggregationFunction;
@@ -604,6 +605,7 @@ public class BuiltInTypeAndFunctionNamespaceManager
                 .aggregates(IntervalDayToSecondSumAggregation.class)
                 .aggregates(IntervalYearToMonthSumAggregation.class)
                 .aggregates(AverageAggregations.class)
+                .aggregates(WeightedAverageAggregations.class)
                 .function(REAL_AVERAGE_AGGREGATION)
                 .aggregates(IntervalDayToSecondAverageAggregation.class)
                 .aggregates(IntervalYearToMonthAverageAggregation.class)
