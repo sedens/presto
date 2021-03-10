@@ -22,12 +22,14 @@ import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
 
 import static com.facebook.presto.common.type.DoubleType.DOUBLE;
 
-@ScalarFunction("mann_whitney_u")
-@Description("Mann-Whitney U test")
-public final class MannWhitneyUFunction
+public final class ArrayStatisticalFunctions
 {
+    private ArrayStatisticalFunctions() {}
+
+    @ScalarFunction("mann_whitney_u")
+    @Description("Mann-Whitney U test")
     @SqlType(StandardTypes.DOUBLE)
-    public double calculateMannWhitneyUInt(
+    public static double calculateMannWhitneyUInt(
             @SqlType("array(double)") Block leftArray,
             @SqlType("array(double)") Block rightArray)
     {
@@ -35,7 +37,7 @@ public final class MannWhitneyUFunction
         return mwu.mannWhitneyUTest(extractDoubleArray(leftArray), extractDoubleArray(rightArray));
     }
 
-    private double[] extractDoubleArray(Block b)
+    private static double[] extractDoubleArray(Block b)
     {
         int n = b.getPositionCount();
         double[] buf = new double[n];
