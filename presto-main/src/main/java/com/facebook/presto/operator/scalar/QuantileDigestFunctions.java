@@ -24,6 +24,9 @@ import com.facebook.presto.spi.function.SqlType;
 import com.google.common.collect.ImmutableList;
 import io.airlift.slice.Slice;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.facebook.presto.common.type.BigintType.BIGINT;
 import static com.facebook.presto.common.type.DoubleType.DOUBLE;
 import static com.facebook.presto.common.type.RealType.REAL;
@@ -161,6 +164,23 @@ public final class QuantileDigestFunctions
     public static Slice scaleQuantileDigestBigint(@SqlType("qdigest(bigint)") Slice input, @SqlType(StandardTypes.DOUBLE) double scale)
     {
         return scaleQuantileDigest(input, scale);
+    }
+
+    @ScalarFunction("winsorized_mean")
+    @Description("Given an input x between min/max values of qdigest, find which quantile is represented by that value")
+    @SqlType(StandardTypes.DOUBLE)
+    @SqlNullable
+    public static Double winsorizedMean(@SqlType("qdigest(bigint)") Slice input, @SqlType(StandardTypes.DOUBLE) double alpha)
+    {
+        QuantileDigest digest = new QuantileDigest(input);
+        List<Long> quantiles = digest.getQuantiles(Arrays.asList(alpha/2, 1-alpha/2, 1.0d));
+        List<QuantileDigest.Bucket> hist = digest.getHistogram(quantiles);
+        double totalCount = hist.stream().map(QuantileDigest.Bucket::getCount).reduce(0.0d, Double::sum);
+        return (
+                hist.get(0).getCount()*quantiles.get(0)
+                        + hist.get(1).getCount()*hist.get(1).getMean()
+                        + hist.get(2).getCount()*quantiles.get(1)
+        ) / totalCount;
     }
 
     private static Slice scaleQuantileDigest(Slice input, double scale)
